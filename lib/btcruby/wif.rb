@@ -8,7 +8,7 @@ module BTC
     KEY_LENGTH = 32
 
     def self.mainnet_version
-      128
+      204
     end
 
     def self.testnet_version

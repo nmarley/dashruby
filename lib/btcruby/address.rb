@@ -29,7 +29,7 @@ module BTC
   class Address
     include Opcodes
     @@registered_classes = []
-    
+
     # Decodes address from a Base58Check-encoded string
     def self.parse(string_or_address)
       raise ArgumentError, "Argument is missing" if !string_or_address
@@ -43,7 +43,7 @@ module BTC
       raw_data = Base58.data_from_base58check(string)
       self.mux_parse_raw_data(raw_data, string)
     end
-    
+
     # Attempts to parse with a proper subclass
     def self.mux_parse_raw_data(raw_data, _string = nil)
       result = nil
@@ -75,12 +75,12 @@ module BTC
       end
       return nil
     end
-    
+
     # Subclasses should register themselves so they can be parsed via BTC::Address.parse()
     def self.register_class(cls)
       @@registered_classes << cls
     end
-    
+
     def network
       @network ||= if !@version
         BTC::Network.default
@@ -115,7 +115,7 @@ module BTC
       data == other.data && version == other.version
     end
     alias_method :eql?, :==
-    
+
     def hash
       data.hash
     end
@@ -226,15 +226,15 @@ module BTC
 
   # Standard pulic key (P2PKH) address (e.g. 19FGfswVqxNubJbh1NW8A4t51T9x9RDVWQ)
   class PublicKeyAddress < Hash160Address
-    
+
     register_class self
 
     def self.mainnet_version
-      0
+      76
     end
 
     def self.testnet_version
-      111
+      139
     end
 
     def p2pkh?
@@ -266,11 +266,11 @@ module BTC
     register_class self
 
     def self.mainnet_version
-      5
+      16
     end
 
     def self.testnet_version
-      196
+      19
     end
 
     def p2sh?
