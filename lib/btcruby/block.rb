@@ -14,25 +14,27 @@ module BTC
       self.new(
         version:             1,
         previous_block_hash: ZERO_HASH256,
-        merkle_root:         BTC.from_hex("3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"),
-        timestamp:           1231006505,
-        bits:                0x1d00ffff,
-        nonce:               0x7c2bac1d,
+        merkle_root:         BTC.from_hex("c762a6567f3cc092f0684bb62b7e00a84890b990f07cc71a6bb58d64b98e02e0"),
+        timestamp:           1390095618,
+        bits:                0x1e0ffff0,
+        nonce:               0x1b93fc2,
         transactions:        [BTC::Transaction.new(
           version:   1,
           inputs:    [
             BTC::TransactionInput.new(
-              coinbase_data: BTC.from_hex("04FFFF001D010445"+
-              "5468652054696D65732030332F4A616E2F32303039204368616E63656C6C6F72206F6E2062" +
-              "72696E6B206F66207365636F6E64206261696C6F757420666F722062616E6B73"),
+              coinbase_data: BTC.from_hex("04FFFF001D01044C595769726564" +
+              "2030392F4A616E2F3230313420546865204772616E64204578706572" +
+              "696D656E7420476F6573204C6976653A204F76657273746F636B2E63" +
+              "6F6D204973204E6F7720416363657074696E6720426974636F696E73"),
             )
           ],
           outputs:   [
             BTC::TransactionOutput.new(
               value: 50*COIN,
-              script: Script.new(data: BTC.from_hex("4104678AFDB0FE5548271967F1"+
-              "A67130B7105CD6A828E03909A67962E0EA1F61DEB649F6BC3F4CEF38"+
-              "C4F35504E51EC112DE5C384DF7BA0B8D578A4C702B6BF11D5FAC"))
+              script: Script.new(data: BTC.from_hex("41040184710FA689AD" +
+              "5023690C80F3A49C8F13F8D45B8C857FBCBC8BC4A8E4D3EB4B10F4D4" +
+              "604FA08DCE601AAF0F470216FE1B51850B4ACF21B179C45070AC7B03" +
+              "A9AC"))
             )
           ],
           lock_time: 0
@@ -45,25 +47,27 @@ module BTC
       self.new(
         version:             1,
         previous_block_hash: ZERO_HASH256,
-        merkle_root:         BTC.from_hex("3ba3edfd7a7b12b27ac72c3e67768f617fc81bc3888a51323a9fb8aa4b1e5e4a"),
-        timestamp:           1296688602,
-        bits:                0x1d00ffff,
-        nonce:               0x18aea41a,
+        merkle_root:         BTC.from_hex("c762a6567f3cc092f0684bb62b7e00a84890b990f07cc71a6bb58d64b98e02e0"),
+        timestamp:           1390666206,
+        bits:                0x1e0ffff0,
+        nonce:               0xe627c9c3,
         transactions:        [BTC::Transaction.new(
           version:   1,
           inputs:    [
             BTC::TransactionInput.new(
-              coinbase_data: BTC.from_hex("04FFFF001D010445"+
-              "5468652054696D65732030332F4A616E2F32303039204368616E63656C6C6F72206F6E2062" +
-              "72696E6B206F66207365636F6E64206261696C6F757420666F722062616E6B73"),
+              coinbase_data: BTC.from_hex("04FFFF001D01044C595769726564" +
+              "2030392F4A616E2F3230313420546865204772616E64204578706572" +
+              "696D656E7420476F6573204C6976653A204F76657273746F636B2E63" +
+              "6F6D204973204E6F7720416363657074696E6720426974636F696E73"),
             )
           ],
           outputs:   [
             BTC::TransactionOutput.new(
               value: 50*COIN,
-              script: Script.new(data: BTC.from_hex("4104678AFDB0FE5548271967F1"+
-              "A67130B7105CD6A828E03909A67962E0EA1F61DEB649F6BC3F4CEF38"+
-              "C4F35504E51EC112DE5C384DF7BA0B8D578A4C702B6BF11D5FAC"))
+              script: Script.new(data: BTC.from_hex("41040184710FA689AD" +
+              "5023690C80F3A49C8F13F8D45B8C857FBCBC8BC4A8E4D3EB4B10F4D4" +
+              "604FA08DCE601AAF0F470216FE1B51850B4ACF21B179C45070AC7B03" +
+              "A9AC"))
             )
           ],
           lock_time: 0
