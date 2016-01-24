@@ -1,3 +1,3 @@
 module Dash
-  VERSION = "1.6".freeze
+  VERSION = "0.1".freeze
 end
