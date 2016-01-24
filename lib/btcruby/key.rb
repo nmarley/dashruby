@@ -449,7 +449,7 @@ module BTC
     end
 
     # Compact signature for a given message. Prepends it with standard prefix
-    # "\x18Bitcoin Signed Message:\n" and encodes message in wire format.
+    # "\x19DarkCoin Signed Message:\n" and encodes message in wire format.
     def message_signature(message)
       raise BTCError, "Not implemented"
     end
