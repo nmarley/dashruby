@@ -9,7 +9,7 @@ module Dash
     STYLE_DASH_LONG = :dash_long  # 1.00000000 is 1 dash (100_000_000 duffs)
     STYLE_MDASH     = :mdash      # 1.0 is 0.001 dash (100_000 duffs)
     STYLE_BIT       = :bit       # 1.0 is 0.000001 dash (100 duffs)
-    STYLE_DUFFS     = :duffs  # 1.0 is 0.00000001 dash (1 satoshi)
+    STYLE_DUFFS     = :duffs  # 1.0 is 0.00000001 dash (1 duff)
 
     attr_accessor :style
     attr_accessor :show_suffix

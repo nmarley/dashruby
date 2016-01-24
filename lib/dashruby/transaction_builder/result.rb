@@ -25,11 +25,11 @@ module Dash
       # Total amount on the outputs.
       attr_reader :outputs_amount
 
-      # Amount in satoshis sent to a change address.
+      # Amount in duffs sent to a change address.
       # change_amount = outputs_amount - sent_amount
       attr_reader :change_amount
 
-      # Amount in satoshis sent to outputs specified by the user.
+      # Amount in duffs sent to outputs specified by the user.
       # sent_amount = outputs_amount - change_amount
       attr_reader :sent_amount
       

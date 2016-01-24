@@ -51,7 +51,7 @@ module Dash
     # Optional attribute referencing an output that this input is spending.
     attr_accessor :transaction_output
 
-    # Optional attribute containing a value in the corresponding output (in satoshis).
+    # Optional attribute containing a value in the corresponding output (in duffs).
     # Default is transaction_output.value or nil.
     attr_accessor :value
 

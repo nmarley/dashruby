@@ -1,10 +1,10 @@
 [Index](index.md)
 
-BTC::TransactionInput
+Dash::TransactionInput
 =====================
 
-Transaction Input (aka "txin") is a part of a bitcoin [transaction](transaction.md) that
-unlocks bitcoins stored in the [outputs](transaction_output.md) of the previous transactions.
+Transaction Input (aka "txin") is a part of a Dash [transaction](transaction.md) that
+unlocks Dash stored in the [outputs](transaction_output.md) of the previous transactions.
 
 Every input contains a reference to some output (transaction hash and a numeric index of the output)
 and a [signature script](script.md) that typically contains [signatures](key.md) and other data
@@ -71,7 +71,7 @@ Default value is `INVALID_INDEX`.
 
 #### signature_script
 
-[BTC::Script](script.md) instance that proves ownership of the previous transaction output.
+[Dash::Script](script.md) instance that proves ownership of the previous transaction output.
 We intentionally do not call it "script" to avoid accidental confusion with
 [TransactionOutput#script](transaction_output.md#script).
 
@@ -108,7 +108,7 @@ Optional reference to an [output](transaction_output.md) that this input is spen
 
 #### value
 
-Optional value in the corresponding output (in satoshis).
+Optional value in the corresponding output (in duffs).
 
 Default value is `transaction_output.value` or `nil`.
 

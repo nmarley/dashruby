@@ -1,29 +1,29 @@
 [Index](index.md)
 
-BTC::Transaction
+Dash::Transaction
 ================
 
-**Transaction** (aka "tx") is an object that represents transfer of bitcoins 
-from one or more [inputs](transaction_input.md) to one or more [outputs](transaction_output.md). 
-Use `BTC::Transaction` class to inspect transactions or create them transactions manually. 
-To build transaction we recommend using [BTC::TransactionBuilder](transaction_builder.md),
+**Transaction** (aka "tx") is an object that represents transfer of Dash
+from one or more [inputs](transaction_input.md) to one or more [outputs](transaction_output.md).
+Use `Dash::Transaction` class to inspect transactions or create them transactions manually.
+To build transaction we recommend using [Dash::TransactionBuilder](transaction_builder.md),
 which takes care of a lot of difficulties and exposes easy to use, yet powerful enough API.
 
 Transactions are stored within [blocks](block.md) that form the *block chain*.
 
 The first transaction in a [block](block.md) is called *coinbase transaction*.
-It has no inputs and the outputs contain collected mining fees and the mining reward (25 BTC per block as of March 2015).
+It has no inputs and the outputs contain collected mining fees and the mining reward.
 
 Constants
 ---------
 
 #### CURRENT_VERSION
 
-Current version for all transactions. Equals `1`. 
+Current version for all transactions. Equals `1`.
 
 #### DEFAULT\_FEE\_RATE
 
-Default mining fee rate in satoshis per 1000 bytes. Equals `10000`.
+Default mining fee rate in duffs per 1000 bytes. Equals `10000`.
 
 
 Initializers
@@ -65,7 +65,7 @@ Attributes
 
 #### version
 
-Version of the transaction. Default value is `BTC::Transaction::CURRENT_VERSION`.
+Version of the transaction. Default value is `Dash::Transaction::CURRENT_VERSION`.
 
 #### inputs
 
@@ -118,7 +118,7 @@ Read-write. Default value is `nil`.
 #### confirmations
 
 Number of confirmations for this transaction (depth in the blockchan).
-Value `0` stands for unconfirmed transaction (stored in mempool). 
+Value `0` stands for unconfirmed transaction (stored in mempool).
 
 Read-write. Default value is `nil`.
 
@@ -167,9 +167,9 @@ Dictionary representation of transaction ready to be encoded in JSON, PropertyLi
 
 Returns `true` if this transaction generates new coins.
 
-#### signature\_hash(input\_index: *Integer*, output\_script: *BTC::Script*, hash\_type: *Integer*)
+#### signature\_hash(input\_index: *Integer*, output\_script: *Dash::Script*, hash\_type: *Integer*)
 
-Returns a binary hash for signing a transaction (see [BTC::Key#ecdsa_signature](key.md#ecdsa_signaturehash)).
+Returns a binary hash for signing a transaction (see [Dash::Key#ecdsa_signature](key.md#ecdsa_signaturehash)).
 You should specify an input index, output [script](script.md) of the previous transaction for that input,
 and an optional [hash type](signature.md) (default is `SIGHASH_ALL`).
 
@@ -191,14 +191,14 @@ Returns `true` if both transactions have equal binary representation.
 
 #### add_input(*input*)
 
-Adds a [BTC::TransactionInput](transaction_input.md) instance to a list of `inputs`.
+Adds a [Dash::TransactionInput](transaction_input.md) instance to a list of `inputs`.
 After being added, input will have its `transaction` attribute set to the receiver.
 
 Returns `self`.
 
 #### add_output(*output*)
 
-Adds a [BTC::TransactionOutput](transaction_output.md) instance to a list of `outputs`.
+Adds a [Dash::TransactionOutput](transaction_output.md) instance to a list of `outputs`.
 After being added, output will have its `transaction` attribute set to the receiver.
 
 Returns `self`.

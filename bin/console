@@ -8,12 +8,13 @@ require 'irb'
 require 'irb/completion'
 
 # IRB.conf[:PROMPT]||={}
-# IRB.conf[:PROMPT][:BTC_PROMPT] = { # name of prompt mode
+# IRB.conf[:PROMPT][:DASH_PROMPT] = { # name of prompt mode
 #   :AUTO_INDENT => true,           # enables auto-indent mode
 #   :PROMPT_I => %{>>},             # normal prompt
 #   :PROMPT_S => %{">},             # prompt for continuated strings
 #   :PROMPT_C => %{*>},             # prompt for continuated statement
 #   :RETURN => "=>%s\n"             # format to return value
 # }
-# IRB.conf[:PROMPT_MODE] = :BTC_PROMPT
+# IRB.conf[:PROMPT_MODE] = :DASH_PROMPT
+# IRB.conf[:PROMPT_MODE] = :DASH_PROMPT
 IRB.start

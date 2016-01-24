@@ -2,7 +2,7 @@ module Dash
   # Proof of work is specified using several terms.
   # 1. `target` is big unsigned integer derived from 256-bit hash (interpreted as little-endian integer).
   #     Hash of a valid block should be below target.
-  # 2. `bits` is a 'satoshi compact' representation of a target as uint32.
+  # 2. `bits` is a 'duff compact' representation of a target as uint32.
   # 3. `difficulty` is a floating point multiple of the minimum difficulty.
   #     Difficulty = 2 means the block is 2x more difficult than the minimal difficulty.
   module ProofOfWork

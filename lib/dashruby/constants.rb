@@ -17,7 +17,7 @@ module Dash
   # The maximum allowed number of signature check operations in a block
   MAX_BLOCK_SIGOPS = MAX_BLOCK_SIZE/50
 
-  # No amount larger than this (in satoshis) is valid
+  # No amount larger than this (in duffs) is valid
   MAX_MONEY = 21_000_000 * COIN
 
   # Coinbase transaction outputs can only be spent after this number of new blocks

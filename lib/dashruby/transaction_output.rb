@@ -6,7 +6,7 @@ module Dash
 
     # Core attributes.
 
-    # Value of output in satoshis.
+    # Value of output in duffs.
     attr_accessor :value
 
     # Dash::Script defining redemption rules for this output (aka scriptPubKey or pk_script)
@@ -247,12 +247,12 @@ module Dash
 
     def dust_limit(relay_fee_rate = Transaction::DEFAULT_RELAY_FEE_RATE)
       # "Dust" is defined in terms of Transaction::DEFAULT_RELAY_FEE_RATE,
-      # which has units satoshis-per-kilobyte.
+      # which has units duffs-per-kilobyte.
       # If you'd pay more than 1/3 in fees
       # to spend something, then we consider it dust.
       # A typical txout is 34 bytes big, and will
       # need a TransactionInput of at least 148 bytes to spend:
-      # so dust is a txout less than 546 satoshis (3*(34+148))
+      # so dust is a txout less than 546 duffs (3*(34+148))
       # with default relay_fee_rate.
       size = self.data.bytesize + 148
       return 3*Transaction.compute_fee(size, fee_rate: relay_fee_rate)

@@ -1,9 +1,9 @@
 [Index](index.md)
 
-BTC::Script
+Dash::Script
 ===========
 
-Script is a string of [opcodes](opcode.md) specifying conditions that allow moving bitcoins from one transaction to another.
+Script is a string of [opcodes](opcode.md) specifying conditions that allow moving Dash from one transaction to another.
 
 Script can be used in two contexts:
 
@@ -25,7 +25,7 @@ Initializers
 
 #### new()
 
-Returns a new empty `BTC::Script` instance. Use `<<` or `+` operators to add operators to the script.
+Returns a new empty `Dash::Script` instance. Use `<<` or `+` operators to add operators to the script.
 
 ```ruby
 >> Script.new << OP_9 << "some pushdata operation" << OP_VERIFY
@@ -34,7 +34,7 @@ Returns a new empty `BTC::Script` instance. Use `<<` or `+` operators to add ope
 
 #### new(hex: *String*)
 
-Returns a new `BTC::Script` instance deserialized from a given hex-encoded string.
+Returns a new `Dash::Script` instance deserialized from a given hex-encoded string.
 
 ```ruby
 >> Script.new(hex: "76a914f2b27f7f9e519a6e77228a603c5c9a8434946a2288ac")
@@ -43,7 +43,7 @@ Returns a new `BTC::Script` instance deserialized from a given hex-encoded strin
 
 #### new(data: *String*)
 
-Returns a new `BTC::Script` instance deserialized from a given binary string.
+Returns a new `Dash::Script` instance deserialized from a given binary string.
 
 ```ruby
 >> Script.new(data: "76a914f2b27f7f9e519a6e77228a603c5c9a8434946a2288ac".from_hex)
@@ -52,7 +52,7 @@ Returns a new `BTC::Script` instance deserialized from a given binary string.
 
 #### new(op\_return: *String* or *Array of Strings*)
 
-Returns a new `BTC::Script` instance containing `OP_RETURN` opcode followed by one or more *pushdata* binary strings.
+Returns a new `Dash::Script` instance containing `OP_RETURN` opcode followed by one or more *pushdata* binary strings.
 
 ```ruby
 >> Script.new(op_return: "correct horse battery staple")
@@ -64,7 +64,7 @@ Returns a new `BTC::Script` instance containing `OP_RETURN` opcode followed by o
 
 #### new(public\_keys: *Array*, signatures\_required: *Integer*)
 
-Returns a new `BTC::Script` instance containing an `OP_CHECKMULTISIG` opcode with the provided public keys and a required number of signatures:
+Returns a new `Dash::Script` instance containing an `OP_CHECKMULTISIG` opcode with the provided public keys and a required number of signatures:
 
 ```ruby
 >> a, b, c = [1,2,3].map{ Key.random.public_key }
@@ -126,11 +126,11 @@ Returns true if both scripts can be serialized in the same binary string.
 #### public\_key\_script?
 
 Returns `true` if the script is of form `<pubkey> OP_CHECKSIG` (rarely used pay-to-pubkey script).
-  
+
 #### public_key
 
 Returns a raw public key if this script is `public_key_script?`.
-  
+
 #### public\_key\_hash\_script?
 
 Returns `true` if this script is a [P2PKH](p2pkh.md) script (`OP_DUP OP_HASH160 <20-byte hash> OP_EQUALVERIFY OP_CHECKSIG`).
@@ -176,7 +176,7 @@ Returns all *pushdata* strings if this script is `op_return_script?`.
 #### multisig\_script?
 
 Returns `true` if this script is a valid multisig script of form `<M> <public keys> <N> OP_CHECKMULTISIG` where:
-  
+
 * Both N and M are greater than zero
 * N is greater or equal M
 * N equals the number of public keys.
@@ -205,13 +205,13 @@ Returns a number of required signatures if this script is `multisig_script?`.
 
 ### Conversion
 
-#### standard_address(network: *BTC::Network*)
+#### standard_address(network: *Dash::Network*)
 
-Returns [BTC::PublicKeyAddress](p2pkh.md) or [BTC::ScriptHashAddress](p2sh.md) if
+Returns [Dash::PublicKeyAddress](p2pkh.md) or [Dash::ScriptHashAddress](p2sh.md) if
 the script is a standard output script for these addresses.
 Returns `nil` for all other scripts.
 
-If `network` is not specified, [BTC::Network.default](network.md#default) is used.
+If `network` is not specified, [Dash::Network.default](network.md#default) is used.
 
 #### p2sh_script
 
@@ -219,7 +219,7 @@ Returns a [P2SH](p2sh.md) script that wraps the receiver: `OP_HASH160 #{script.d
 
 #### simulated\_signature\_script(strict: true|false)
 
-Returns a dummy *signature script* of the same length and structure as the intended *signature script* for the receiver. 
+Returns a dummy *signature script* of the same length and structure as the intended *signature script* for the receiver.
 Only a few standard script types are supported.
 
 Set `strict` to `false` to allow imprecise guess for P2SH script (2-of-3 multisig). Default is `true`.
@@ -254,11 +254,11 @@ Removes all occurences of *pushdata* opcodes containing `string`.
 
 #### append_script(script)
 
-Appends a `BTC::Script` instance to receiver.
+Appends a `Dash::Script` instance to receiver.
 
 #### <<(*script*)
 
-Appends `BTC::Script` instance to receiver. Same as `append_script(script)`.
+Appends `Dash::Script` instance to receiver. Same as `append_script(script)`.
 
 #### <<(*Integer*)
 
@@ -270,7 +270,7 @@ Appends a *pushdata* opcode with a given string. Same as `append_pushdata(string
 
 #### <<(*Array*)
 
-Appends an array of `BTC::Script` instances, opcode and strings. Array may contain nested arrays.
+Appends an array of `Dash::Script` instances, opcode and strings. Array may contain nested arrays.
 
 #### +
 

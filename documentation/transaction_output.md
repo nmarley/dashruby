@@ -1,14 +1,14 @@
 [Index](index.md)
 
-BTC::TransactionOutput
+Dash::TransactionOutput
 ======================
 
-Transaction Output (aka "txout") is a part of a bitcoin [transaction](transaction.md) that specifies
-destination of the bitcoins being transferred.
+Transaction Output (aka "txout") is a part of a Dash [transaction](transaction.md) that specifies
+destination of the Dash being transferred.
 
-Every output has `value` (in satoshis) and `script` (that typically corresponds to an [address](address.md)).
+Every output has `value` (in duffs) and `script` (that typically corresponds to an [address](address.md)).
 
-This class is frequently used to specify **unspent outputs** (aka "unspents"). 
+This class is frequently used to specify **unspent outputs** (aka "unspents").
 Unspent outputs typically have optional attributes `transaction_hash` and `index` to allow
 creating a corresponding [input](transaction_input.md).
 
@@ -32,7 +32,7 @@ All attributes are optional and have appropriate default values.
 
 ```ruby
 TransactionOutput.new(
-  value: 42 * BTC::COIN,
+  value: 42 * Dash::COIN,
   script: Address.parse("1CBtcGivXmHQ8ZqdPgeMfcpQNJrqTrSAcG").script,
   ...
 )
@@ -43,11 +43,11 @@ Attributes
 
 #### value
 
-Amount in satoshis to be locked in this output.
+Amount in duffs to be locked in this output.
 
 #### script
 
-An instance of [BTC::Script](script.md) that specifies conditions that allow spending bitcoins.
+An instance of [Dash::Script](script.md) that specifies conditions that allow spending Dash.
 
 Typically corresponds to a recipient [address](address.md):
 

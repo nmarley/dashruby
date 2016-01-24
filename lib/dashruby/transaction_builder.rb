@@ -71,7 +71,7 @@ module Dash
     # Default value equals minimum_change.
     # This means builder will never fail with "insufficient funds" just because it could not
     # find enough unspents for big enough change. In worst case it will forgo the change
-    # as a part of the mining fee. Set to 0 to avoid wasting a single satoshi.
+    # as a part of the mining fee. Set to 0 to avoid wasting a single duff.
     attr_accessor :dust_change
 
     # If true, does not sort unspent_outputs by confirmations number.
@@ -84,7 +84,7 @@ module Dash
     # Composed by converting all `WIF` instance in `input_addresses` to corresponding public addresses.
     attr_reader :public_addresses
 
-    # A total amount in satoshis to be spent in all outputs (not including change output).
+    # A total amount in duffs to be spent in all outputs (not including change output).
     # If equals `nil`, all available unspent outputs for the public_address are expected to be returned
     # ("swiping the keys").
     attr_reader :outputs_amount
@@ -350,7 +350,7 @@ module Dash
               # Try adding more utxos on the next cycle (or fail if no more utxos are available).
 
             elsif change >= 0 && change <= self.dust_change
-              # This also includes the case when change is exactly zero satoshis.
+              # This also includes the case when change is exactly zero duffs.
               # Remove the change output, keep existing outputs_amount, set fee and try to sign.
               result.transaction.outputs = result.transaction.outputs[0, result.transaction.outputs.size - 1]
               result.change_amount = 0
