@@ -1,36 +1,36 @@
 require_relative 'spec_helper'
 require 'stringio'
-describe BTC::WireFormat do
+describe Dash::WireFormat do
 
   def verify_varint(int, hex)
 
     raw = hex.from_hex
 
     # 1a. Encode to buffer
-    BTC::WireFormat.write_varint(int).must_equal(raw)
+    Dash::WireFormat.write_varint(int).must_equal(raw)
 
     # 1b. Write to data buffer
     data = "deadbeef".from_hex
-    BTC::WireFormat.write_varint(int, data: data)
+    Dash::WireFormat.write_varint(int, data: data)
     data.to_hex.must_equal("deadbeef" + hex)
 
     # 1c. Write data to stream
     data = "cafebabe".from_hex
     io = StringIO.new(data)
     io.read # scan forward
-    BTC::WireFormat.write_varint(int, stream: io)
+    Dash::WireFormat.write_varint(int, stream: io)
     data.to_hex.must_equal("cafebabe" + hex)
 
     # 2a. Decode from data
-    BTC::WireFormat.read_varint(data: raw).must_equal [int, raw.bytesize]
-    BTC::WireFormat.read_varint(data: "cafebabe".from_hex + raw, offset: 4).must_equal [int, 4 + raw.bytesize]
+    Dash::WireFormat.read_varint(data: raw).must_equal [int, raw.bytesize]
+    Dash::WireFormat.read_varint(data: "cafebabe".from_hex + raw, offset: 4).must_equal [int, 4 + raw.bytesize]
 
     # 2b. Decode from stream
     io = StringIO.new(raw + "deadbeef".from_hex)
-    BTC::WireFormat.read_varint(stream: io).must_equal [int, raw.bytesize]
+    Dash::WireFormat.read_varint(stream: io).must_equal [int, raw.bytesize]
 
     io = StringIO.new("deadbeef".from_hex + raw + "cafebabe".from_hex)
-    BTC::WireFormat.read_varint(stream: io, offset: 4).must_equal [int, 4 + raw.bytesize]
+    Dash::WireFormat.read_varint(stream: io, offset: 4).must_equal [int, 4 + raw.bytesize]
   end
 
   it "should encode/decode canonical varints" do
@@ -49,41 +49,41 @@ describe BTC::WireFormat do
 
   it "should decode non-canonical varints" do
 
-    BTC::WireFormat.read_varint(data: "fd0000".from_hex).first.must_equal 0x00
-    BTC::WireFormat.read_varint(data: "fd1100".from_hex).first.must_equal 0x11
+    Dash::WireFormat.read_varint(data: "fd0000".from_hex).first.must_equal 0x00
+    Dash::WireFormat.read_varint(data: "fd1100".from_hex).first.must_equal 0x11
 
-    BTC::WireFormat.read_varint(data: "fe00000000".from_hex).first.must_equal 0x00
-    BTC::WireFormat.read_varint(data: "fe11000000".from_hex).first.must_equal 0x11
-    BTC::WireFormat.read_varint(data: "fe11220000".from_hex).first.must_equal 0x2211
+    Dash::WireFormat.read_varint(data: "fe00000000".from_hex).first.must_equal 0x00
+    Dash::WireFormat.read_varint(data: "fe11000000".from_hex).first.must_equal 0x11
+    Dash::WireFormat.read_varint(data: "fe11220000".from_hex).first.must_equal 0x2211
 
-    BTC::WireFormat.read_varint(data: "ff0000000000000000".from_hex).first.must_equal 0x00
-    BTC::WireFormat.read_varint(data: "ff1100000000000000".from_hex).first.must_equal 0x11
-    BTC::WireFormat.read_varint(data: "ff1122000000000000".from_hex).first.must_equal 0x2211
-    BTC::WireFormat.read_varint(data: "ff1122334400000000".from_hex).first.must_equal 0x44332211
+    Dash::WireFormat.read_varint(data: "ff0000000000000000".from_hex).first.must_equal 0x00
+    Dash::WireFormat.read_varint(data: "ff1100000000000000".from_hex).first.must_equal 0x11
+    Dash::WireFormat.read_varint(data: "ff1122000000000000".from_hex).first.must_equal 0x2211
+    Dash::WireFormat.read_varint(data: "ff1122334400000000".from_hex).first.must_equal 0x44332211
 
   end
 
   it "should handle errors when decoding varints" do
 
-    proc { BTC::WireFormat.read_varint() }.must_raise ArgumentError
-    proc { BTC::WireFormat.read_varint(data: "".from_hex, stream: StringIO.new("")) }.must_raise ArgumentError
+    proc { Dash::WireFormat.read_varint() }.must_raise ArgumentError
+    proc { Dash::WireFormat.read_varint(data: "".from_hex, stream: StringIO.new("")) }.must_raise ArgumentError
 
-    BTC::WireFormat.read_varint(data: "".from_hex).must_equal [nil, 0]
-    BTC::WireFormat.read_varint(data: "fd".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_varint(data: "fd11".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_varint(data: "fe".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_varint(data: "fe112233".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_varint(data: "ff".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_varint(data: "ff11223344556677".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_varint(data: "".from_hex).must_equal [nil, 0]
+    Dash::WireFormat.read_varint(data: "fd".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_varint(data: "fd11".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_varint(data: "fe".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_varint(data: "fe112233".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_varint(data: "ff".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_varint(data: "ff11223344556677".from_hex).must_equal [nil, 1]
 
   end
 
   it "should handle errors when encoding varints" do
 
-    proc { BTC::WireFormat.write_varint(-1) }.must_raise ArgumentError
-    proc { BTC::WireFormat.write_varint(nil) }.must_raise ArgumentError
-    proc { BTC::WireFormat.write_varint(2**64) }.must_raise ArgumentError
-    proc { BTC::WireFormat.write_varint(2**64 + 1) }.must_raise ArgumentError
+    proc { Dash::WireFormat.write_varint(-1) }.must_raise ArgumentError
+    proc { Dash::WireFormat.write_varint(nil) }.must_raise ArgumentError
+    proc { Dash::WireFormat.write_varint(2**64) }.must_raise ArgumentError
+    proc { Dash::WireFormat.write_varint(2**64 + 1) }.must_raise ArgumentError
 
   end
 
@@ -91,30 +91,30 @@ describe BTC::WireFormat do
     raw = hex.from_hex
 
     # 1a. Encode to buffer
-    BTC::WireFormat.write_string(string).must_equal(raw)
+    Dash::WireFormat.write_string(string).must_equal(raw)
 
     # 1b. Write to data buffer
     data = "deadbeef".from_hex
-    BTC::WireFormat.write_string(string, data: data)
+    Dash::WireFormat.write_string(string, data: data)
     data.to_hex.must_equal("deadbeef" + hex)
 
     # 1c. Write data to stream
     data = "cafebabe".from_hex
     io = StringIO.new(data)
     io.read # scan forward
-    BTC::WireFormat.write_string(string, stream: io)
+    Dash::WireFormat.write_string(string, stream: io)
     data.to_hex.must_equal("cafebabe" + hex)
 
     # 2a. Decode from data
-    BTC::WireFormat.read_string(data: raw).must_equal [string.b, raw.bytesize]
-    BTC::WireFormat.read_string(data: "cafebabe".from_hex + raw, offset: 4).must_equal [string.b, 4 + raw.bytesize]
+    Dash::WireFormat.read_string(data: raw).must_equal [string.b, raw.bytesize]
+    Dash::WireFormat.read_string(data: "cafebabe".from_hex + raw, offset: 4).must_equal [string.b, 4 + raw.bytesize]
 
     # 2b. Decode from stream
     io = StringIO.new(raw + "deadbeef".from_hex)
-    BTC::WireFormat.read_string(stream: io).must_equal [string.b, raw.bytesize]
+    Dash::WireFormat.read_string(stream: io).must_equal [string.b, raw.bytesize]
 
     io = StringIO.new("deadbeef".from_hex + raw + "cafebabe".from_hex)
-    BTC::WireFormat.read_string(stream: io, offset: 4).must_equal [string.b, 4 + raw.bytesize]
+    Dash::WireFormat.read_string(stream: io, offset: 4).must_equal [string.b, 4 + raw.bytesize]
   end
 
   it "should encode/decode canonical varstrings" do
@@ -131,54 +131,54 @@ describe BTC::WireFormat do
 
   it "should handle errors when decoding varstrings" do
 
-    proc { BTC::WireFormat.read_string() }.must_raise ArgumentError
-    proc { BTC::WireFormat.read_string(data: "".from_hex, stream: StringIO.new("")) }.must_raise ArgumentError
+    proc { Dash::WireFormat.read_string() }.must_raise ArgumentError
+    proc { Dash::WireFormat.read_string(data: "".from_hex, stream: StringIO.new("")) }.must_raise ArgumentError
 
-    BTC::WireFormat.read_string(data: "".from_hex).must_equal [nil, 0]
-    BTC::WireFormat.read_string(data: "fd".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_string(data: "fd11".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_string(data: "fe".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_string(data: "fe112233".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_string(data: "ff".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_string(data: "ff11223344556677".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_string(data: "".from_hex).must_equal [nil, 0]
+    Dash::WireFormat.read_string(data: "fd".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_string(data: "fd11".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_string(data: "fe".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_string(data: "fe112233".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_string(data: "ff".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_string(data: "ff11223344556677".from_hex).must_equal [nil, 1]
 
     # Not enough data in the string
-    BTC::WireFormat.read_string(data: "030102".from_hex).must_equal [nil, 1]
-    BTC::WireFormat.read_string(stream: StringIO.new("030102".from_hex)).must_equal [nil, 3]
+    Dash::WireFormat.read_string(data: "030102".from_hex).must_equal [nil, 1]
+    Dash::WireFormat.read_string(stream: StringIO.new("030102".from_hex)).must_equal [nil, 3]
 
-    BTC::WireFormat.read_string(data: "fd03000102".from_hex).must_equal [nil, 3]
-    BTC::WireFormat.read_string(stream: StringIO.new("fd03000102".from_hex)).must_equal [nil, 5]
+    Dash::WireFormat.read_string(data: "fd03000102".from_hex).must_equal [nil, 3]
+    Dash::WireFormat.read_string(stream: StringIO.new("fd03000102".from_hex)).must_equal [nil, 5]
 
   end
 
   it "should handle errors when encoding varstrings" do
-    proc { BTC::WireFormat.write_string(nil) }.must_raise ArgumentError
+    proc { Dash::WireFormat.write_string(nil) }.must_raise ArgumentError
   end
 
   def verify_fixint(int_type, int, hex)
     raw = hex.from_hex
 
     # Check data
-    v, len = BTC::WireFormat.send("read_#{int_type}", data: raw)
+    v, len = Dash::WireFormat.send("read_#{int_type}", data: raw)
     v.must_equal int
     len.must_equal raw.size
 
     # Check data + offset + tail
-    v, len = BTC::WireFormat.send("read_#{int_type}", data: "abc" + raw + "def", offset: 3)
+    v, len = Dash::WireFormat.send("read_#{int_type}", data: "abc" + raw + "def", offset: 3)
     v.must_equal int
     len.must_equal raw.size + 3
 
     # Check stream
-    v, len = BTC::WireFormat.send("read_#{int_type}", stream: StringIO.new(raw))
+    v, len = Dash::WireFormat.send("read_#{int_type}", stream: StringIO.new(raw))
     v.must_equal int
     len.must_equal raw.size
 
     # Check stream + offset + tail
-    v, len = BTC::WireFormat.send("read_#{int_type}", stream: StringIO.new("abc" + raw + "def"), offset: 3)
+    v, len = Dash::WireFormat.send("read_#{int_type}", stream: StringIO.new("abc" + raw + "def"), offset: 3)
     v.must_equal int
     len.must_equal raw.size + 3
 
-    BTC::WireFormat.send("encode_#{int_type}", int).must_equal raw
+    Dash::WireFormat.send("encode_#{int_type}", int).must_equal raw
   end
 
   it "should encode/decode fix-size ints" do
@@ -249,16 +249,16 @@ describe BTC::WireFormat do
   it "should encode/decode varint-prefixed arrays" do
 
     txs = [
-      BTC::Transaction.new,
-      BTC::Transaction.new(inputs:[BTC::TransactionInput.new]),
-      BTC::Transaction.new(outputs:[BTC::TransactionOutput.new])
+      Dash::Transaction.new,
+      Dash::Transaction.new(inputs:[Dash::TransactionInput.new]),
+      Dash::Transaction.new(outputs:[Dash::TransactionOutput.new])
     ]
-    data = BTC::WireFormat.encode_array(txs) {|t|t.data}
+    data = Dash::WireFormat.encode_array(txs) {|t|t.data}
     data.bytes[0].must_equal txs.size
     data.must_equal txs.inject("\x03".b){|d,t| d+t.data}
 
     stream = StringIO.new(data)
-    txs2 = BTC::WireFormat.read_array(stream: stream){ BTC::Transaction.new(stream: stream) }
+    txs2 = Dash::WireFormat.read_array(stream: stream){ Dash::Transaction.new(stream: stream) }
     txs2[0].data.must_equal txs[0].data
     txs2[1].data.must_equal txs[1].data
     txs2[2].data.must_equal txs[2].data

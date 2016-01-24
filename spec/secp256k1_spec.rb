@@ -1,11 +1,11 @@
 require_relative 'spec_helper'
-require_relative '../lib/btcruby/secp256k1'
-describe BTC::Secp256k1 do
+require_relative '../lib/dashruby/secp256k1'
+describe Dash::Secp256k1 do
   
   def verify_rfc6979_signature(keyhex, msg, sighex)
-    key = BTC::Key.new(private_key: keyhex.from_hex)
-    hash = BTC.sha256(msg)
-    sig = BTC::Secp256k1.ecdsa_signature(hash, key.private_key)
+    key = Dash::Key.new(private_key: keyhex.from_hex)
+    hash = Dash.sha256(msg)
+    sig = Dash::Secp256k1.ecdsa_signature(hash, key.private_key)
     sig.to_hex.must_equal sighex
   end
 

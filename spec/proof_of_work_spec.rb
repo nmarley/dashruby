@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
-describe BTC::ProofOfWork do
+describe Dash::ProofOfWork do
 
-  POW = BTC::ProofOfWork
+  POW = Dash::ProofOfWork
 
   it "should convert target to bits" do
     POW.bits_from_target(0x00000000ffff0000000000000000000000000000000000000000000000000000).must_equal 0x1d00ffff

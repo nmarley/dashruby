@@ -1,12 +1,12 @@
 require_relative 'spec_helper'
-describe BTC::SecretSharing do
-  
-  SSSS = BTC::SecretSharing
-  
+describe Dash::SecretSharing do
+
+  SSSS = Dash::SecretSharing
+
   test_vectors = [
-    
+
     # 128-bit secrets
-    
+
     {
       "secret" => "31415926535897932384626433832795", # 128 bits
       "1-of-1" => ["1131415926535897932384626433832795"],
@@ -15,7 +15,7 @@ describe BTC::SecretSharing do
       "1-of-3" => ["1131415926535897932384626433832795", "1231415926535897932384626433832795", "1331415926535897932384626433832795"],
       "2-of-3" => ["215af384f05d9b45f0e4e348f95b371acd", "2284a5b0ba67ddf44ea6422f8e82eb0e05", "23ae57dc847220a2ac67a11623aa9f013d"],
       "3-of-3" => ["316cb005ab037e85ed9c8befbe72fef75c", "321387c8a1b34863197fae486ca60c1b97", "3325c8a20a62b62f16cceb6c6eccaa93a7"],
-      "4-of-6" => ["416c4b3a8dc218696f8b1aed23385496eb", "429b14a744ce462bdc71b910b5cf0890ba", "4384d4d7881b01db3881cd0f17457112c8", 
+      "4-of-6" => ["416c4b3a8dc218696f8b1aed23385496eb", "429b14a744ce462bdc71b910b5cf0890ba", "4384d4d7881b01db3881cd0f17457112c8",
                    "44f0c303944b6b73e265c52a42e9601a3c", "45a61663a602a2f238c80fa43408a7a57b", "466c062ff9e3c8529a531abee5f119b1ac"],
       "10-of-16"=>["a1a8b4077b75b0b18aefa63399d0b8d749", "a2e015e817190296d9ebe29f1c8cdc21c7", "a3c65760010c358c9760cece5da815edb4", "a4129891c5efd375a8367c854ab08010d6",
                    "a53c138386a55b0b35447ca03e44ab4eeb", "a6182993f21038c5d3bf548dac9dee7e20", "a769f010c04a4996b471a82addd4ea05d4", "a88e27a316dda9822f81616b2d48cb5e23",
@@ -43,10 +43,10 @@ describe BTC::SecretSharing do
       "2-of-3" => ["2125df3f1da76af07c37689382bc8201a6", "224bbe7e3b4ed5e0f86ed127057904034c", "23719dbd58f640d174a639ba88358604f2"],
       "3-of-3" => ["31651161eeddabb39134be97908f0d7d9e", "32671d1a7e6d7ef24037990a5285a75164", "33062329aeaf79bc0d088f5845e3cd7b52"],
     },
-    
-    
+
+
     # 104-bit secrets
-    
+
     {
       "secret" => "31415926535897932384626433",
       "1-of-1" => ["1131415926535897932384626433"],
@@ -79,10 +79,10 @@ describe BTC::SecretSharing do
       "2-of-3" => ["219aa26f55d8a706cb6801023e74", "223544deabb14e0d96d002047cf9", "23cfe74e0189f51462380306bb6d"],
       "3-of-3" => ["315a50b9d324cbf8cf4546d9e085", "32ca50d93a5f8028070814b77faa", "3350005e35b01c8da7486998dd80"],
     },
-    
-    
+
+
     # 96-bit secrets
-    
+
     {
       "secret" => "314159265358979323846264",
       "1-of-1" => ["11314159265358979323846264"],
@@ -116,21 +116,21 @@ describe BTC::SecretSharing do
       "3-of-3" => ["317119aa02f2a7f1fccb38a7f7", "324dc572966cb5fdac97a47389", "33960359ba6e2a230f654362a5"],
     },
   ]
-  
+
   test_vectors.each do |test|
     hexsecret = test.delete("secret")
-    secret = BTC.from_hex(hexsecret)
-    ssss = BTC::SecretSharing.new(secret.bytesize*8)    
+    secret = Dash.from_hex(hexsecret)
+    ssss = Dash::SecretSharing.new(secret.bytesize*8)
     test.each do |rule, defined_shares|
       m, n = rule.split("-of-").map{|x|x.to_i}
       it "Should split and restore #{rule} shares for #{hexsecret}" do
         shares = ssss.split(secret, m, n)
-        hexshares = shares.map{|s| BTC.to_hex(s)}
+        hexshares = shares.map{|s| Dash.to_hex(s)}
         hexshares.must_equal defined_shares
         [shares, shares.reverse].each do |list|
           [list[0...m], list[0...m].reverse].each do |subshares|
             restored_secret = ssss.restore(subshares)
-            BTC.to_hex(restored_secret).must_equal hexsecret
+            Dash.to_hex(restored_secret).must_equal hexsecret
           end
         end
       end

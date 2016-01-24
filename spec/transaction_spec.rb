@@ -2,11 +2,11 @@ require_relative 'spec_helper'
 require_relative 'data/tx_valid'
 require_relative 'data/tx_invalid'
 
-describe BTC::Transaction do
+describe Dash::Transaction do
 
   it "should have core attributes" do
 
-    tx = BTC::Transaction.new
+    tx = Dash::Transaction.new
 
     tx.data.to_hex.must_equal("01000000" + "0000" + "00000000")
 
@@ -49,17 +49,17 @@ describe BTC::Transaction do
               raise "Bad test: input is an array of 3 items: #{test.inspect}" if input.size != 3
               previd, previndex, scriptstring = input
             
-              outpoint = BTC::Outpoint.new(transaction_id: previd, index: previndex)
+              outpoint = Dash::Outpoint.new(transaction_id: previd, index: previndex)
             
               mapprevOutScriptPubKeys[outpoint] = parse_script(scriptstring)
             end
           
-            tx = BTC::Transaction.new(hex: test[1])
+            tx = Dash::Transaction.new(hex: test[1])
             flags = parse_flags(test[2])
             
             if debug_filter(test)
               validation_proc = lambda do
-                validation_passed = BTC::Validation.new.check_transaction(tx, BTC::ValidationState.new)
+                validation_passed = Dash::Validation.new.check_transaction(tx, Dash::ValidationState.new)
                 if expected_result
                   validation_passed.must_equal expected_result
                 end
@@ -71,14 +71,14 @@ describe BTC::Transaction do
                     raise "Bad test: output script not found: #{test.inspect}" if !output_script
                     sig_script = txin.signature_script
                     if !sig_script
-                      sig_script = BTC::Script.new(data: txin.coinbase_data)
+                      sig_script = Dash::Script.new(data: txin.coinbase_data)
                     end
                     
-                    checker = BTC::TransactionSignatureChecker.new(transaction: tx, input_index: txin.index)
+                    checker = Dash::TransactionSignatureChecker.new(transaction: tx, input_index: txin.index)
                     extensions = []
-                    extensions << BTC::P2SHExtension.new if (flags & BTC::ScriptFlags::SCRIPT_VERIFY_P2SH) != 0
-                    extensions << BTC::CLTVExtension.new if (flags & BTC::ScriptFlags::SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY) != 0
-                    interpreter = BTC::ScriptInterpreter.new(
+                    extensions << Dash::P2SHExtension.new if (flags & Dash::ScriptFlags::SCRIPT_VERIFY_P2SH) != 0
+                    extensions << Dash::CLTVExtension.new if (flags & Dash::ScriptFlags::SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY) != 0
+                    interpreter = Dash::ScriptInterpreter.new(
                       flags: flags,
                       extensions: extensions,
                       signature_checker: checker,
@@ -180,17 +180,17 @@ describe BTC::Transaction do
     end
 
     it "should convert tx ID to binary hash" do
-      BTC.hash_from_id(nil).must_equal nil
-      BTC.hash_from_id(@txid).must_equal @txhash
+      Dash.hash_from_id(nil).must_equal nil
+      Dash.hash_from_id(@txid).must_equal @txhash
     end
 
     it "should convert binary hash to tx ID" do
-      BTC.id_from_hash(nil).must_equal nil
-      BTC.id_from_hash(@txhash).must_equal @txid
+      Dash.id_from_hash(nil).must_equal nil
+      Dash.id_from_hash(@txhash).must_equal @txid
     end
 
     it "should convert hash to/from id for TransactionOutput" do
-      txout = BTC::TransactionOutput.new
+      txout = Dash::TransactionOutput.new
       txout.transaction_hash = @txhash
       txout.transaction_id.must_equal @txid
       txout.transaction_id = "deadbeef"
@@ -201,11 +201,11 @@ describe BTC::Transaction do
 
   describe "Amounts calculation" do
     before do
-      @tx = BTC::Transaction.new
-      @tx.add_input(BTC::TransactionInput.new)
-      @tx.add_input(BTC::TransactionInput.new)
-      @tx.add_output(BTC::TransactionOutput.new(value: 123))
-      @tx.add_output(BTC::TransactionOutput.new(value: 50_000))
+      @tx = Dash::Transaction.new
+      @tx.add_input(Dash::TransactionInput.new)
+      @tx.add_input(Dash::TransactionInput.new)
+      @tx.add_output(Dash::TransactionOutput.new(value: 123))
+      @tx.add_output(Dash::TransactionOutput.new(value: 50_000))
     end
 
     it "should have good defaults" do
@@ -257,8 +257,8 @@ describe BTC::Transaction do
                 "2ac0ba2afa7ada4660bd38e27585aac7d4e6e435ffffffff02c0791817000000" +
                 "0017a914bd224370f93a2b0435ded92c7f609e71992008fc87ac7b4d1d000000" +
                 "001976a914450c22770eebb00d376edabe7bb548aa64aa235688ac00000000").from_hex
-      @tx = BTC::Transaction.new(hex: @txdata.to_hex)
-      @tx = BTC::Transaction.new(data: @txdata)
+      @tx = Dash::Transaction.new(hex: @txdata.to_hex)
+      @tx = Dash::Transaction.new(data: @txdata)
     end
 
     it "should decode inputs and outputs correctly" do
@@ -291,8 +291,8 @@ describe BTC::Transaction do
         "043304596050ca119efccada1dd7ca8e511a76d8e1ddb7ad050298d208455b8bcd09593d823ca252355bf0b41c2ac0ba2afa7ada4660bd38e27585aac7d4e6e435"
       ]
 
-      BTC::Diagnostics.current.trace do
-        BTC::Key.validate_script_signature(@tx.inputs.first.signature_script.to_a[0], verify_lower_s: true).must_equal true
+      Dash::Diagnostics.current.trace do
+        Dash::Key.validate_script_signature(@tx.inputs.first.signature_script.to_a[0], verify_lower_s: true).must_equal true
       end
     end
 
@@ -304,7 +304,7 @@ describe BTC::Transaction do
                 "0000000000ffffffff130301e6040654188d181202119700de00000fccffffff" +
                 "ff0108230595000000001976a914ca6ecc7d4d671d8c5c964a48dbb0bc194407" +
                 "a30688ac00000000").from_hex
-      @tx = BTC::Transaction.new(data: @txdata)
+      @tx = Dash::Transaction.new(data: @txdata)
     end
 
     it "should encode coinbase inputs correctly" do
