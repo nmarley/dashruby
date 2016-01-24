@@ -4,6 +4,7 @@ require "dashruby/version"
 
 Gem::Specification.new do |s|
   s.name              = "dashruby"
+  s.email             = "nathan.marley@gmail.com"
   s.version           = Dash::VERSION
   s.description       = "Dash toolkit for Ruby"
   s.summary           = "Rich library for building awesome Dash apps."

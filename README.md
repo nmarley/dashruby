@@ -1,22 +1,21 @@
-# BTCRuby
+# DashRuby
 
-[![Build Status](https://magnum.travis-ci.com/oleganza/btcruby.svg?token=84LHn4zp2Z1676MxCHjR)](https://magnum.travis-ci.com/oleganza/btcruby)
+DashRuby is a clone of DashRuby, used for creating [Dash](https://www.dash.org/) applications.
 
-BTCRuby aims at clarity, security and flexibility. The API is designed simultenously
-with [CoreBitcoin](https://github.com/oleganza/CoreBitcoin) (Objective-C library) and polished on real-life applications.
+**Warning: This library is currently in alpha stage. Use at your own risk.**
 
 ## Documentation and Examples
 
-Please see [BTCRuby Reference](documentation/index.md) for API documentation and examples.
+Please see [DashRuby Reference](documentation/index.md) for API documentation and examples.
 
 ## Basic Features
 
-* Encoding/decoding of addresses, WIF private keys (`BTC::Address`).
+* Encoding/decoding of addresses, WIF private keys (`Dash::Address`).
 * APIs to construct and inspect blocks, transactions and scripts.
-* Native BIP32 and BIP44 ("HW Wallets") support (see `BTC::Keychain`).
+* Native BIP32 and BIP44 ("HW Wallets") support (see `Dash::Keychain`).
 * Explicit APIs to handle compressed and uncompressed public keys.
-* Explicit APIs to handle mainnet/testnet (see `BTC::Network`)
-* Consistent API for data encoding used throughout the library itself (see `BTC::Data` and `BTC::WireFormat`).
+* Explicit APIs to handle mainnet/testnet (see `Dash::Network`)
+* Consistent API for data encoding used throughout the library itself (see `Dash::Data` and `Dash::WireFormat`).
 * Flexible transaction builder that can work with arbitrary data sources that provide unspent outputs.
 * Handy extensions on built-in classes (e.g. `String#to_hex`) are optional (see `extensions.rb`).
 * Optional attributes on Transaction, TransactionOutput and TransactionInput to hold additional data
@@ -24,12 +23,12 @@ Please see [BTCRuby Reference](documentation/index.md) for API documentation and
 
 ## Advanced Features
 
-* ECDSA signatures are deterministic and normalized according to [RFC6979](https://tools.ietf.org/html/rfc6979) 
+* ECDSA signatures are deterministic and normalized according to [RFC6979](https://tools.ietf.org/html/rfc6979)
   and [BIP62](https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki).
-* Automatic normalization of existing ECDSA signatures (see `BTC::Key#normalized_signature`).
-* Rich script analysis and compositing support (see `BTC::Script`).
+* Automatic normalization of existing ECDSA signatures (see `Dash::Key#normalized_signature`).
+* Rich script analysis and compositing support (see `Dash::Script`).
 * Full script interpreter with [P2SH](https://github.com/bitcoin/bips/blob/master/bip-0016.mediawiki) and [CLTV](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) features.
-* Powerful diagnostics API covering the entire library (see `BTC::Diagnostics`).
+* Powerful diagnostics API covering the entire library (see `Dash::Diagnostics`).
 * Canonicality checks for transactions, public keys and script elements.
 * Fee computation and signature script simulation for building transactions without signing them.
 
@@ -43,7 +42,7 @@ Please see [BTCRuby Reference](documentation/index.md) for API documentation and
 * We enforces canonical and determinstic ECDSA signatures for maximum compatibility and security using native OpenSSL functions.
 * We treat endianness explicitly. Even though most systems are little-endian, it never hurts to show where indianness is important.
 
-The goal is to provide a complete Bitcoin toolkit in Ruby.
+The goal is to provide a complete Dash toolkit in Ruby.
 
 ## How to run tests
 
@@ -63,12 +62,12 @@ $ rake
 ```
 $ git tag VERSION
 $ git push origin --tags
-$ gem build btcruby.gemspec
-$ gem push btcruby-VERSION.gem
+$ gem build dashruby.gemspec
+$ gem push dashruby-VERSION.gem
 ```
 
 ## Authors
 
 * [Oleg Andreev](http://oleganza.com/)
 * [Ryan Smith](http://r.32k.io)
-
+* [Nathan Marley](http://marley.io/)
