@@ -6,12 +6,12 @@
 # which is then transformed into a P2SH address. To redeem from this address you will need
 # not only two signatures, but also the original multisig script.
 
-require_relative "../lib/btcruby.rb"
+require_relative "../lib/dashruby.rb"
 
-keys = [BTC::Key.random, BTC::Key.random, BTC::Key.random]
+keys = [Dash::Key.random, Dash::Key.random, Dash::Key.random]
 pubkeys = keys.map(&:public_key)
 
-multisig_script = BTC::Script.multisig_script(public_keys: pubkeys, signatures_required: 2)
+multisig_script = Dash::Script.multisig_script(public_keys: pubkeys, signatures_required: 2)
 puts multisig_script.to_s # => "OP_2 03e4e14a... 03b4b3f7... 030fa2ec... OP_3 OP_CHECKMULTISIG"
 
 p2sh_script = multisig_script.p2sh_script

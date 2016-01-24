@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 
-describe BTC::Mnemonic, "standard test vectors" do
+describe Dash::Mnemonic, "standard test vectors" do
 
   [
     [
@@ -82,7 +82,7 @@ describe BTC::Mnemonic, "standard test vectors" do
       entropy = vector[0].from_hex
       words = vector[1]
       seed = vector[2].from_hex
-      mnemonic = BTC::Mnemonic.new(words: words, password: "TREZOR")
+      mnemonic = Dash::Mnemonic.new(words: words, password: "TREZOR")
       mnemonic.seed.to_hex.must_equal seed.to_hex
     end
   end

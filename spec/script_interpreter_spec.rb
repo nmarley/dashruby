@@ -2,18 +2,18 @@ require_relative 'spec_helper'
 require_relative 'data/script_valid'
 require_relative 'data/script_invalid'
 
-describe BTC::ScriptInterpreter do
+describe Dash::ScriptInterpreter do
 
   module ScriptTestHelper
     extend self
 
     def verify_script(sig_script, output_script, flags, expected_result, record)
       tx = build_spending_transaction(sig_script, build_crediting_transaction(output_script));
-      checker = BTC::TransactionSignatureChecker.new(transaction: tx, input_index: 0)
+      checker = Dash::TransactionSignatureChecker.new(transaction: tx, input_index: 0)
       extensions = []
-      extensions << BTC::P2SHExtension.new if (flags & BTC::ScriptFlags::SCRIPT_VERIFY_P2SH) != 0
-      extensions << BTC::CLTVExtension.new if (flags & BTC::ScriptFlags::SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY) != 0
-      interpreter = BTC::ScriptInterpreter.new(
+      extensions << Dash::P2SHExtension.new if (flags & Dash::ScriptFlags::SCRIPT_VERIFY_P2SH) != 0
+      extensions << Dash::CLTVExtension.new if (flags & Dash::ScriptFlags::SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY) != 0
+      interpreter = Dash::ScriptInterpreter.new(
         flags: flags,
         extensions: extensions,
         signature_checker: checker,

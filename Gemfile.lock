@@ -1,18 +1,21 @@
 PATH
   remote: .
   specs:
-    btcruby (0.1.0)
+    dashruby (0.1)
       ffi (~> 1.9, >= 1.9.3)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    ffi (1.9.3)
-    rake (10.3.2)
+    ffi (1.9.10)
+    rake (10.5.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  btcruby!
+  dashruby!
   rake
+
+BUNDLED WITH
+   1.10.6

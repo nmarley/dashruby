@@ -1,26 +1,26 @@
 require 'minitest/spec'
 require 'minitest/autorun'
 
-require_relative '../lib/btcruby'
-require_relative '../lib/btcruby/extensions'
+require_relative '../lib/dashruby'
+require_relative '../lib/dashruby/extensions'
 
-# So every test can access classes directly without prefixing them with BTC::
-#include BTC
+# So every test can access classes directly without prefixing them with Dash::
+#include Dash
 
 # Script helper used by transaction_spec and script_interpreter_spec
 FLAGS_MAP = {
-    "" =>                           BTC::ScriptFlags::SCRIPT_VERIFY_NONE,
-    "NONE" =>                       BTC::ScriptFlags::SCRIPT_VERIFY_NONE,
-    "P2SH" =>                       BTC::ScriptFlags::SCRIPT_VERIFY_P2SH,
-    "STRICTENC" =>                  BTC::ScriptFlags::SCRIPT_VERIFY_STRICTENC,
-    "DERSIG" =>                     BTC::ScriptFlags::SCRIPT_VERIFY_DERSIG,
-    "LOW_S" =>                      BTC::ScriptFlags::SCRIPT_VERIFY_LOW_S,
-    "NULLDUMMY" =>                  BTC::ScriptFlags::SCRIPT_VERIFY_NULLDUMMY,
-    "SIGPUSHONLY" =>                BTC::ScriptFlags::SCRIPT_VERIFY_SIGPUSHONLY,
-    "MINIMALDATA" =>                BTC::ScriptFlags::SCRIPT_VERIFY_MINIMALDATA,
-    "DISCOURAGE_UPGRADABLE_NOPS" => BTC::ScriptFlags::SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS,
-    "CLEANSTACK" =>                 BTC::ScriptFlags::SCRIPT_VERIFY_CLEANSTACK,
-    "CHECKLOCKTIMEVERIFY" =>        BTC::ScriptFlags::SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY,
+    "" =>                           Dash::ScriptFlags::SCRIPT_VERIFY_NONE,
+    "NONE" =>                       Dash::ScriptFlags::SCRIPT_VERIFY_NONE,
+    "P2SH" =>                       Dash::ScriptFlags::SCRIPT_VERIFY_P2SH,
+    "STRICTENC" =>                  Dash::ScriptFlags::SCRIPT_VERIFY_STRICTENC,
+    "DERSIG" =>                     Dash::ScriptFlags::SCRIPT_VERIFY_DERSIG,
+    "LOW_S" =>                      Dash::ScriptFlags::SCRIPT_VERIFY_LOW_S,
+    "NULLDUMMY" =>                  Dash::ScriptFlags::SCRIPT_VERIFY_NULLDUMMY,
+    "SIGPUSHONLY" =>                Dash::ScriptFlags::SCRIPT_VERIFY_SIGPUSHONLY,
+    "MINIMALDATA" =>                Dash::ScriptFlags::SCRIPT_VERIFY_MINIMALDATA,
+    "DISCOURAGE_UPGRADABLE_NOPS" => Dash::ScriptFlags::SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS,
+    "CLEANSTACK" =>                 Dash::ScriptFlags::SCRIPT_VERIFY_CLEANSTACK,
+    "CHECKLOCKTIMEVERIFY" =>        Dash::ScriptFlags::SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY,
 }
 
 def parse_script(json_script, expected_result = true)
@@ -33,7 +33,7 @@ def parse_script(json_script, expected_result = true)
     oldsize = json_script.size
     json_script.gsub!(/0x([0-9a-fA-F]+)\s+0x/, "0x\\1")
   end
-  json_script.split(" ").inject(BTC::Script.new) do |parsed_script, x|
+  json_script.split(" ").inject(Dash::Script.new) do |parsed_script, x|
     if x.size == 0
       # Empty string, ignore.
       parsed_script
@@ -41,21 +41,21 @@ def parse_script(json_script, expected_result = true)
       # Number
       n = x.to_i
       if (n == -1) || (n >= 1 and n <= 16)
-        parsed_script << BTC::Opcode.opcode_for_small_integer(n)
+        parsed_script << Dash::Opcode.opcode_for_small_integer(n)
       else
-        parsed_script << BTC::ScriptNumber.new(integer: n).data
+        parsed_script << Dash::ScriptNumber.new(integer: n).data
       end
     elsif x[0,2] == "0x"
       # Raw hex data, inserted NOT pushed onto stack:
-      data = BTC.from_hex(x[2..-1])
-      BTC::Script.new(data: parsed_script.data + data)
+      data = Dash.from_hex(x[2..-1])
+      Dash::Script.new(data: parsed_script.data + data)
     elsif x =~ /^'.*'$/
       # Single-quoted string, pushed as data.
       parsed_script << x[1..-2]
     else
       # opcode, e.g. OP_ADD or ADD:
-      opcode = BTC::Opcode.opcode_for_name("OP_" + x)
-      opcode = BTC::Opcode.opcode_for_name(x) if opcode == BTC::OP_INVALIDOPCODE
+      opcode = Dash::Opcode.opcode_for_name("OP_" + x)
+      opcode = Dash::Opcode.opcode_for_name(x) if opcode == Dash::OP_INVALIDOPCODE
       parsed_script << opcode
     end
   end
@@ -78,14 +78,14 @@ def parse_flags(string)
 end
 
 def build_crediting_transaction(scriptPubKey)
-  txCredit = BTC::Transaction.new
+  txCredit = Dash::Transaction.new
   txCredit.version = 1
   txCredit.lock_time = 0
-  txCredit.add_input(BTC::TransactionInput.new(
+  txCredit.add_input(Dash::TransactionInput.new(
     previous_hash: nil,
-    coinbase_data: (BTC::Script.new << BTC::ScriptNumber.new(integer:0) << BTC::ScriptNumber.new(integer:0)).data
+    coinbase_data: (Dash::Script.new << Dash::ScriptNumber.new(integer:0) << Dash::ScriptNumber.new(integer:0)).data
   ))
-  txCredit.add_output(BTC::TransactionOutput.new(
+  txCredit.add_output(Dash::TransactionOutput.new(
     script: scriptPubKey,
     value: 0
   ))
@@ -93,16 +93,16 @@ def build_crediting_transaction(scriptPubKey)
 end
 
 def build_spending_transaction(scriptSig, txCredit)
-  txSpend = BTC::Transaction.new
+  txSpend = Dash::Transaction.new
   txSpend.version = 1
   txSpend.lock_time = 0
-  txSpend.add_input(BTC::TransactionInput.new(
+  txSpend.add_input(Dash::TransactionInput.new(
     previous_hash: txCredit.transaction_hash,
     previous_index: 0,
     signature_script: scriptSig
   ))
-  txSpend.add_output(BTC::TransactionOutput.new(
-    script: BTC::Script.new,
+  txSpend.add_output(Dash::TransactionOutput.new(
+    script: Dash::Script.new,
     value: 0
   ))
   txSpend
@@ -110,16 +110,16 @@ end
 
 # ctx = build_crediting_transaction(Script.new)
 # stx = build_spending_transaction(Script.new, build_crediting_transaction(Script.new))
-# 
+#
 # puts "crediting tx: #{ctx.transaction_id}" # 7f33a2f5ace097f071010d5105e7fd01f22c83d8d5daa741a41f2a630a2af23b
 # puts "spending tx:  #{stx.transaction_id}" # add55eb99bb1f653ab822ea4177cb0f9673bcc5c2c4c729894ab0c626c8fa1e1
-# 
+#
 # puts "crediting tx: #{ctx.data.to_hex}"
 # puts "spending tx:  #{stx.data.to_hex}"
 # From Bitcoin Core:
-# ctxdummy: 01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff020000ffffffff0100000000000000000000000000; 
+# ctxdummy: 01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff020000ffffffff0100000000000000000000000000;
 # ID = 7f33a2f5ace097f071010d5105e7fd01f22c83d8d5daa741a41f2a630a2af23b
-# stxdummy: 01000000013bf22a0a632a1fa441a7dad5d8832cf201fde705510d0171f097e0acf5a2337f0000000000ffffffff0100000000000000000000000000; 
+# stxdummy: 01000000013bf22a0a632a1fa441a7dad5d8832cf201fde705510d0171f097e0acf5a2337f0000000000ffffffff0100000000000000000000000000;
 # ID = add55eb99bb1f653ab822ea4177cb0f9673bcc5c2c4c729894ab0c626c8fa1e1
 
 

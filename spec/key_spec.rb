@@ -1,17 +1,17 @@
 require_relative 'spec_helper'
 
-describe BTC::Key do
+describe Dash::Key do
 
   def verify_rfc6979_nonce(keyhex, msg, khex)
-    keybin = BTC.from_hex(keyhex)
-    hash = BTC.sha256(msg)
-    k = BTC::OpenSSL.rfc6979_ecdsa_nonce(hash, keybin)
+    keybin = Dash.from_hex(keyhex)
+    hash = Dash.sha256(msg)
+    k = Dash::OpenSSL.rfc6979_ecdsa_nonce(hash, keybin)
     k.to_hex.must_equal khex
   end
 
   def verify_rfc6979_signature(keyhex, msg, sighex)
-    key = BTC::Key.new(private_key: keyhex.from_hex)
-    hash = BTC.sha256(msg)
+    key = Dash::Key.new(private_key: keyhex.from_hex)
+    hash = Dash.sha256(msg)
     sig = key.ecdsa_signature(hash)
     sig.to_hex.must_equal sighex
   end
@@ -59,8 +59,8 @@ describe BTC::Key do
   end
 
   it "should perform Diffie-Hellman multiplication" do
-    alice = BTC::Key.new(private_key: "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a".from_hex, public_key_compressed: true)
-    bob = BTC::Key.new(private_key: "2db963f0fe106f483d9afa73bd4e39a8ac4bbcb1fbec99d65bf59d85c8cb62ee".from_hex, public_key_compressed: true)
+    alice = Dash::Key.new(private_key: "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a".from_hex, public_key_compressed: true)
+    bob = Dash::Key.new(private_key: "2db963f0fe106f483d9afa73bd4e39a8ac4bbcb1fbec99d65bf59d85c8cb62ee".from_hex, public_key_compressed: true)
     dh_pubkey1 = alice.diffie_hellman(bob)
     dh_pubkey1.compressed_public_key.to_hex.must_equal "03735932754bc16e10febe40ee0280906d29459d477442f1838dcf27de3b5d9699"
 
@@ -69,7 +69,7 @@ describe BTC::Key do
   end
 
   it "should support compressed public keys" do
-    k = BTC::Key.new(private_key: "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a".from_hex, public_key_compressed: true)
+    k = Dash::Key.new(private_key: "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a".from_hex, public_key_compressed: true)
     k.private_key.to_hex.must_equal "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a"
     k.public_key.to_hex.must_equal "0378d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c71"
     k.address.to_s.must_equal "1C7zdTfnkzmr13HfA2vNm5SJYRK6nEKyq8"
@@ -86,7 +86,7 @@ describe BTC::Key do
   end
 
   it "should support uncompressed public keys" do
-    k = BTC::Key.new(private_key: BTC.from_hex("c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a"), public_key_compressed: false)
+    k = Dash::Key.new(private_key: Dash.from_hex("c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a"), public_key_compressed: false)
     k.private_key.to_hex.must_equal "c4bbcb1fbec99d65bf59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a"
     k.public_key.to_hex.must_equal "0478d430274f8c5ec1321338151e9f27f4c676a008bdf8638d07c0b6be9ab35c71a1518063243acd4dfe96b66e3f2ec8013c8e072cd09b3834a19f81f659cc3455"
     k.address.to_s.must_equal "1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T"
@@ -107,14 +107,14 @@ describe BTC::Key do
       message = "Test message #{n}"
       private_key = "Key #{n}".sha256
 
-      key = BTC::Key.new(private_key: private_key)
+      key = Dash::Key.new(private_key: private_key)
 
       signature = key.ecdsa_signature(message.sha256)
 
       signature.bytesize.must_be :>=, 60
       signature.bytesize.must_be :<=, 72
 
-      key2 = BTC::Key.new(public_key: key.public_key)
+      key2 = Dash::Key.new(public_key: key.public_key)
 
       result = key2.verify_ecdsa_signature(signature, message.sha256)
       result.must_equal true
@@ -124,21 +124,21 @@ describe BTC::Key do
   it "should test canonicality of the signature" do
 
     # Stress-test canonicality checks
-    key = BTC::Key.new(private_key: BTC.sha256("some key"))
+    key = Dash::Key.new(private_key: Dash.sha256("some key"))
     2560.times do |i|
-      hash = BTC.sha256("tx#{i}")
+      hash = Dash.sha256("tx#{i}")
       sig = key.ecdsa_signature(hash) + "\x01".b
-      canonical = BTC::Key.validate_script_signature(sig)
+      canonical = Dash::Key.validate_script_signature(sig)
       if !canonical
-        puts BTC::Diagnostics.current.last_message
+        puts Dash::Diagnostics.current.last_message
       end
       canonical.must_equal true
     end
 
     sig = "3045022100e81a33ac22d0ef25d359a5353977f0f953608b2733141239ec02363237ab6781022045c71237e95b56079e9fa88591060e4c1a4bb02c0cad1ebeb092749d4aa9754701".from_hex
-    canonical = BTC::Key.validate_script_signature(sig)
+    canonical = Dash::Key.validate_script_signature(sig)
     if !canonical
-      puts BTC::Diagnostics.current.last_message
+      puts Dash::Diagnostics.current.last_message
     end
     canonical.must_equal true
   end
@@ -146,11 +146,11 @@ describe BTC::Key do
   it "should test normalization of non-canonical signatures" do
 
     # # Generate non-canonical signatures
-    # key = BTC::Key.new(private_key: BTC.sha256("some other key"))
+    # key = Dash::Key.new(private_key: Dash.sha256("some other key"))
     # 2560.times do |i|
-    #   hash = BTC.sha256("tx#{i}")
+    #   hash = Dash.sha256("tx#{i}")
     #   sig = key.ecdsa_signature(hash, normalized: false) + "\x01".b
-    #   if !BTC::Key.validate_script_signature(sig)
+    #   if !Dash::Key.validate_script_signature(sig)
     #     puts sig[0, sig.size - 1].to_hex
     #   end
     # end
@@ -181,23 +181,23 @@ describe BTC::Key do
       3045022062d08bff9580238c8cd62d9d64e9c1d518932886651f46a445bff773993500f00221008029263cc9ec64589bbbe140995096c257a1fbacf5f9f5ee69a69b96c626cc7a
     ].each do |hex_sig|
       sig = hex_sig.from_hex
-      canonical = BTC::Key.validate_script_signature(sig + "\x01".b)
+      canonical = Dash::Key.validate_script_signature(sig + "\x01".b)
       canonical.must_equal false
-      sig2 = BTC::Key.normalized_signature(sig)
+      sig2 = Dash::Key.normalized_signature(sig)
       sig2.wont_equal nil
       sig2.wont_equal sig
-      canonical = BTC::Key.validate_script_signature(sig2 + "\x01".b)
+      canonical = Dash::Key.validate_script_signature(sig2 + "\x01".b)
       if !canonical
-        puts BTC::Diagnostics.current.last_message
+        puts Dash::Diagnostics.current.last_message
       end
       canonical.must_equal true
 
       # Non-canonical signature must be normalized
-      sig3 = BTC::Key.validate_and_normalize_script_signature(sig + "\x01".b)
+      sig3 = Dash::Key.validate_and_normalize_script_signature(sig + "\x01".b)
       sig3.must_equal sig2 + "\x01".b
 
       # Canonical signature should stay the same
-      sig4 = BTC::Key.validate_and_normalize_script_signature(sig2 + "\x01".b)
+      sig4 = Dash::Key.validate_and_normalize_script_signature(sig2 + "\x01".b)
       sig4.must_equal sig2 + "\x01".b
     end
   end

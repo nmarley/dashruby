@@ -5,9 +5,9 @@
 # compute the signature and compose a signature script for each input and
 # take care of calculating a change amount correctly.
 
-require_relative "../lib/btcruby.rb"
+require_relative "../lib/dashruby.rb"
 
-include BTC
+include Dash
 
 tx = Transaction.new
 
@@ -25,7 +25,7 @@ tx.add_output(TransactionOutput.new(
 key = Key.new(wif: "L1uyy5qTuGrVXrmrsvHWHgVzW9kKdrp27wBC7Vs6nZDTF2BRUVwy")
 
 # 4. Sign the input (assuming it links to an output with address 18oxCAnbuKHDjP7KzLBDj8mLjggDBjE1Q9)
-hashtype = BTC::SIGHASH_ALL
+hashtype = Dash::SIGHASH_ALL
 sighash = tx.signature_hash(input_index: 0,
                             output_script: PublicKeyAddress.parse("18oxCAnbuKHDjP7KzLBDj8mLjggDBjE1Q9").script,
                             hash_type: hashtype)
