@@ -179,13 +179,6 @@ module BTC
       self.inputs.size == 1 && self.inputs[0].coinbase?
     end
     
-    # Returns `true` if this transaction contains an Open Assets marker.
-    # Does not perform expensive validation.
-    # Use this method to quickly filter out non-asset transactions.
-    def open_assets_transaction?
-      self.outputs.any? {|txout| txout.script.open_assets_marker? }
-    end
-
     def inputs=(inputs)
       remove_all_inputs
       @inputs = inputs || []

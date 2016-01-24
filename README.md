@@ -32,7 +32,6 @@ Please see [BTCRuby Reference](documentation/index.md) for API documentation and
 * Powerful diagnostics API covering the entire library (see `BTC::Diagnostics`).
 * Canonicality checks for transactions, public keys and script elements.
 * Fee computation and signature script simulation for building transactions without signing them.
-* Complete OpenAssets implementation: validating OpenAssets transactions, easy to use transaction builder, API for handling Asset Definition.
 
 ## Philosophy
 

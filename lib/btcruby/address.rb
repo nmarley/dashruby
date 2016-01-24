@@ -171,9 +171,6 @@ module BTC
     #     PublicKeyAddress,
     #     ScriptHashAddress,
     #     WIF,
-    #     AssetID,
-    #     IssuanceID,
-    #     AssetAddress,
     #   ].inject({}) do |dict, cls|
     #     dict[cls.mainnet_version] = cls
     #     dict[cls.testnet_version] = cls

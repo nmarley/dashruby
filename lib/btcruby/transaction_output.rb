@@ -241,13 +241,6 @@ module BTC
       return nil
     end
 
-    # Returns `true` if this transaction output contains an Open Assets marker.
-    # Does not perform expensive validation.
-    # Use this method to quickly filter out non-asset transactions.
-    def open_assets_marker?
-      self.script.open_assets_marker?
-    end
-
     def dust?(relay_fee_rate = Transaction::DEFAULT_RELAY_FEE_RATE)
       return self.value < self.dust_limit(relay_fee_rate)
     end

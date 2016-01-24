@@ -188,19 +188,6 @@ describe BTC::Address do
     (address5 == address51).must_equal true
   end
 
-  it "should detect if wrong subclass is used when parsing an address" do
-    btc_addr_string = "19FGfswVqxNubJbh1NW8A4t51T9x9RDVWQ"
-    asset_addr_string = "akB4NBW9UuCmHuepksob6yfZs6naHtRCPNy"
-    btc_addr = BTC::Address.parse(btc_addr_string)
-    asset_addr = BTC::Address.parse(asset_addr_string)
-
-    ->{ BTC::AssetAddress.parse(btc_addr_string) }.must_raise ArgumentError
-    ->{ BTC::AssetAddress.parse(btc_addr) }.must_raise ArgumentError
-    
-    ->{ BTC::BitcoinPaymentAddress.parse(asset_addr_string) }.must_raise ArgumentError
-    ->{ BTC::BitcoinPaymentAddress.parse(asset_addr) }.must_raise ArgumentError
-  end
-
 end
 
 

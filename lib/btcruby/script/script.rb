@@ -222,19 +222,6 @@ module BTC
       return @chunks[1, @chunks.size-1].map{|c| c.pushdata}
     end
 
-    # Returns `true` if this script may be a valid OpenAssets marker.
-    # Only checks the prefix and minimal length, does not validate the content.
-    # Use this method to quickly filter out non-asset transactions.
-    def open_assets_marker?
-      return false if !op_return_data_only_script?
-      data = op_return_data
-      return false if !data || data.bytesize < 6
-      if data[0, AssetMarker::PREFIX_V1.bytesize] == AssetMarker::PREFIX_V1
-        return true
-      end
-      false
-    end
-
     # Returns pushdata if script starts with <pushdata> OP_DROP
     # Returns nil if the script starts with some other opcodes or shorter than 2 opcodes.
     def dropped_prefix_data

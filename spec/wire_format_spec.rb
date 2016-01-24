@@ -246,56 +246,6 @@ describe BTC::WireFormat do
 
   end
 
-  def verify_uleb128(int, hex)
-
-    raw = hex.from_hex
-
-    # 1a. Encode to buffer
-    BTC::WireFormat.write_uleb128(int).must_equal(raw)
-
-    # 1b. Write to data buffer
-    data = "deadbeef".from_hex
-    BTC::WireFormat.write_uleb128(int, data: data)
-    data.to_hex.must_equal("deadbeef" + hex)
-
-    # 1c. Write data to stream
-    data = "cafebabe".from_hex
-    io = StringIO.new(data)
-    io.read # scan forward
-    BTC::WireFormat.write_uleb128(int, stream: io)
-    data.to_hex.must_equal("cafebabe" + hex)
-
-    # 2a. Decode from data
-    BTC::WireFormat.read_uleb128(data: raw).must_equal [int, raw.bytesize]
-    BTC::WireFormat.read_uleb128(data: "cafebabe".from_hex + raw, offset: 4).must_equal [int, 4 + raw.bytesize]
-
-    # 2b. Decode from stream
-    io1 = StringIO.new(raw)
-    io2 = StringIO.new(raw + "deadbeef".from_hex)
-    BTC::WireFormat.read_uleb128(stream: io1).must_equal [int, raw.bytesize]
-    BTC::WireFormat.read_uleb128(stream: io2).must_equal [int, raw.bytesize]
-
-    io1 = StringIO.new("deadbeef".from_hex + raw)
-    io2 = StringIO.new("deadbeef".from_hex + raw + "cafebabe".from_hex)
-    BTC::WireFormat.read_uleb128(stream: io1, offset: 4).must_equal [int, 4 + raw.bytesize]
-    BTC::WireFormat.read_uleb128(stream: io2, offset: 4).must_equal [int, 4 + raw.bytesize]
-  end
-
-
-  it "should encode/decode LEB128-encoded unsigned integers" do
-    verify_uleb128(0, "00")
-    verify_uleb128(1, "01")
-    verify_uleb128(127, "7f")
-    verify_uleb128(128, "8001")
-    verify_uleb128(0xff, "ff01")
-    verify_uleb128(0x100, "8002")
-    verify_uleb128(300, "ac02")
-    verify_uleb128(624485, "e58e26")
-    verify_uleb128(0xffffff, "ffffff07")
-    verify_uleb128(0x1000000, "80808008")
-    verify_uleb128(2**64, "80808080808080808002")
-  end
-
   it "should encode/decode varint-prefixed arrays" do
 
     txs = [
