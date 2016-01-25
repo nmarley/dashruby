@@ -15,7 +15,15 @@ module BTC
     end
     
     def seed
-      @seed ||= make_seed(words: @words, password: @password)
+      @seed ||= make_seed(words: @words,
+                          password: @password,
+                          salt_prefix: 'mnemonic')
+    end
+
+    def electrum_seed
+      @electrum_seed ||= make_seed(words: @words,
+                                   password: @password,
+                                   salt_prefix: 'electrum')
     end
     
     def keychain
@@ -23,13 +31,13 @@ module BTC
     end
     
     private
-    
-    def make_seed(words: nil, password: nil)
+
+    def make_seed(words: nil, password: nil, salt_prefix: 'mnemonic')
       password ||= ""
       
       mnemonic = @words.join(" ").b
-      salt = "mnemonic#{password}".b
-      
+      salt = "#{salt_prefix}#{password}".b
+
       digest = ::OpenSSL::Digest::SHA512.new
       length = digest.digest_length
       
