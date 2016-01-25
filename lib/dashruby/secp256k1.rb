@@ -32,7 +32,7 @@ module Dash
     def ecdsa_signature(hash, privkey)
       raise ArgumentError, "Hash is missing" if !hash
       raise ArgumentError, "Private key is missing" if !privkey
-      
+
       with_context(SECP256K1_CONTEXT_SIGN) do |ctx|
         hash_buf = FFI::MemoryPointer.new(:uchar, hash.bytesize)
         hash_buf.put_bytes(0, hash)
@@ -41,7 +41,7 @@ module Dash
 
         privkey_buf = FFI::MemoryPointer.new(:uchar, privkey.bytesize)
         privkey_buf.put_bytes(0, privkey)
-        
+
         if secp256k1_ecdsa_sign(ctx, hash_buf, sig.pointer, privkey_buf, nil, nil) == 1
           # Serialize an ECDSA signature in DER format.
           bufsize = 72
@@ -60,7 +60,7 @@ module Dash
       raise ArgumentError, "Signature is missing" if !signature
       raise ArgumentError, "Hash is missing" if !hash
       raise ArgumentError, "Public key is missing" if !public_key
-      
+
       # TODO:...
     end
 

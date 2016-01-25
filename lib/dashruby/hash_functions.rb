@@ -4,7 +4,7 @@ require 'digest/rmd160'
 require 'openssl'
 
 module Dash
-  
+
   # This allows doing `Dash.sha256(...)`
   module HashFunctions; end
   include HashFunctions

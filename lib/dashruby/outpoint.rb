@@ -3,11 +3,11 @@ module Dash
   class Outpoint
     INVALID_INDEX = 0xFFFFFFFF # aka "(unsigned int) -1" in Dash-Qt.
     ZERO_HASH256  = ("\x00".b*32).freeze
-    
+
     attr_accessor :transaction_hash
     attr_accessor :transaction_id
     attr_accessor :index
-    
+
     def initialize(transaction_hash: nil, transaction_id: nil, index: 0)
       @transaction_hash = transaction_hash
       self.transaction_id = transaction_id if transaction_id
@@ -16,7 +16,7 @@ module Dash
       end
       @index = index
     end
-    
+
     def transaction_id=(txid)
       self.transaction_hash = Dash.hash_from_id(txid)
     end
@@ -24,11 +24,11 @@ module Dash
     def transaction_id
       Dash.id_from_hash(self.transaction_hash)
     end
-    
+
     def outpoint_id
       %{#{transaction_id}:#{index}}
     end
-    
+
     def null?
       @index == INVALID_INDEX && @transaction_hash == ZERO_HASH256
     end
@@ -54,7 +54,7 @@ module Dash
       outpoint_id
     end
   end
-  
+
   # For backwards compatibility keep the longer name.
   TransactionOutpoint = Outpoint
 end

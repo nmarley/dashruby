@@ -4,7 +4,7 @@ require 'openssl'
 require 'openssl/digest'
 module Dash
   class Mnemonic
-    
+
     def initialize(words: nil, password: "")
       if words.is_a?(String)
         words = words.split(" ")
@@ -13,39 +13,39 @@ module Dash
       @words = words
       @password = password
     end
-    
+
     def seed
       @seed ||= make_seed(words: @words, password: @password)
     end
-    
+
     def keychain
       @keychain ||= Keychain.new(seed: seed)
     end
-    
+
     private
-    
+
     def make_seed(words: nil, password: nil)
       password ||= ""
-      
+
       mnemonic = @words.join(" ").b
       salt = "mnemonic#{password}".b
-      
+
       digest = ::OpenSSL::Digest::SHA512.new
       length = digest.digest_length
-      
+
       return ::OpenSSL::PKCS5.pbkdf2_hmac(
         mnemonic,
         salt,
-        2048, # iterations 
+        2048, # iterations
         length,
         digest
       )
     end
-    
+
     public
-    
+
     # For manual testing
-    
+
     def print_addresses(range: 0..100, network: Dash::Network.mainnet, account: 0)
       kc = keychain.bip44_keychain(network: network).bip44_account_keychain(account)
       puts "Addresses for account #{account} on #{network.name}"
@@ -60,6 +60,6 @@ module Dash
         puts s
       end
     end
-    
+
   end
 end

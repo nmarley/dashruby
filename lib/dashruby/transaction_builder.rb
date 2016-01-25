@@ -44,7 +44,7 @@ module Dash
     # If TransactionOutput#confirmations attribute is not nil, outputs are sorted
     # from oldest to newest, unless #keep_unspent_outputs_order is set to true.
     attr_accessor :unspent_outputs
-    
+
     # Array of non-published transactions, which outputs can be consumed.
     attr_accessor :parent_transactions
 
@@ -127,11 +127,11 @@ module Dash
       @provider = provider
       @unspent_outputs = nil
     end
-    
+
     def internal_provider
       @internal_provider ||= (self.provider || Provider.new{|txb| []})
     end
-    
+
     def change_address=(change_address)
       if change_address
         addr = Dash::DashPaymentAddress.parse(change_address)
@@ -269,15 +269,15 @@ module Dash
       else
         sorted_utxos = utxos.to_a.sort_by{|txout| -(txout.confirmations || -1) } # oldest first
       end
-      
+
       if self.parent_transactions
-        # Can repeat some outputs in mandatory_utxos or sorted_utxos, 
+        # Can repeat some outputs in mandatory_utxos or sorted_utxos,
         # but double-spending will be prevented by provider.
         self.parent_transactions.each do |parenttx|
           sorted_utxos += parenttx.outputs
         end
       end
-      
+
       all_utxos = (sorted_utxos + mandatory_utxos)
 
       while true
@@ -291,7 +291,7 @@ module Dash
             mandatory_utxos.shift
           else
             sorted_utxos.shift
-          end 
+          end
           if utxo.value > 0 &&
             !utxo.script.op_return_script? &&
             !self.internal_provider.consumed_unspent_output?(utxo)
@@ -303,7 +303,7 @@ module Dash
             utxo = nil
           end
         end
-        
+
         if !utxo
           # puts "ALL UTXOS:"
           # all_utxos.each do |utxo|
@@ -311,7 +311,7 @@ module Dash
           # end
           raise InsufficientFundsError
         end
-        
+
         result.inputs_amount += utxo.value
 
         raise ArgumentError, "Transaction hash must be non-nil in unspent output" if !utxo.transaction_hash

@@ -347,7 +347,7 @@ module Dash
     def ecdsa_normalized_signature(signature)
       ecdsa_reserialize_signature(signature, normalize_s: true)
     end
-    
+
     def ecdsa_reserialize_signature(signature, normalize_s: false)
       raise ArgumentError, "Signature is missing" if !signature
 
@@ -368,7 +368,7 @@ module Dash
         end
 
         sig = ECDSA_SIG.new(psig) # read sig from its pointer
-        
+
         if normalize_s
           # Enforce low S values, by negating the value (modulo the order) if above order/2.
           s = sig[:s]
@@ -401,7 +401,7 @@ module Dash
       raise ArgumentError, "Signature is missing" if !signature
       raise ArgumentError, "Hash is missing" if !hash
       raise ArgumentError, "Public key is missing" if !public_key
-      
+
       # New versions of OpenSSL will reject non-canonical DER signatures. de/re-serialize first.
       signature = ecdsa_reserialize_signature(signature, normalize_s: false)
 

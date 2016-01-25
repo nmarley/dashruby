@@ -2,7 +2,7 @@ module Dash
   # Private key in Wallet Import Format (WIF aka Sipa format).
   # Examples: 5KQntKuhYWSRXNq... or L3p8oAcQTtuokSC...
   class WIF < Address
-    
+
     register_class self
 
     KEY_LENGTH = 32

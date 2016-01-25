@@ -10,7 +10,7 @@ module Dash
   REJECT_CHECKPOINT      = 0x43
 
   class Validation
-    
+
     def initialize(
         max_block_size: MAX_BLOCK_SIZE,
         min_coinbase_size: 2,
@@ -22,7 +22,7 @@ module Dash
       @max_coinbase_size = max_coinbase_size
       @max_money = max_money
     end
-    
+
     def check_transaction(tx, state)
       # Basic checks that don't depend on any context
       if tx.inputs.empty?
@@ -75,12 +75,12 @@ module Dash
       end
       return true
     end
-    
+
     def check_money_range(value)
       value >= 0 && value <= @max_money
     end
   end
-  
+
   class ValidationState
     def DoS(level, return_value = false, reject_code = 0, reject_reason = "", corruption = false, debug_message = "")
       # TODO: set the state

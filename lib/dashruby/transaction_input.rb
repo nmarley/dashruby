@@ -42,8 +42,8 @@ module Dash
     # It is set in `tx.add_input` and reset to nil in `tx.remove_all_inputs`.
     # Default is nil.
     attr_accessor :transaction
-    
-    # Optional index within owning transaction. 
+
+    # Optional index within owning transaction.
     # It is set in `tx.add_input` and reset to nil in `tx.remove_all_inputs`.
     # Default is nil.
     attr_accessor :index
@@ -200,16 +200,16 @@ module Dash
     def previous_id=(txid)
       self.previous_hash = Dash.hash_from_id(txid)
     end
-    
+
     def outpoint
       Outpoint.new(transaction_hash: previous_hash, index: previous_index)
     end
-    
+
     def outpoint=(outpoint)
       self.previous_hash = outpoint.transaction_hash
       self.previous_index = outpoint.index
     end
-    
+
     def final?
       self.sequence == MAX_SEQUENCE
     end

@@ -5,17 +5,17 @@
 # * This algorithm splits and restores 96/104/128-bit secrets with up to 16 shares and up to 16 shares threshold.
 # * Secret is a binary 16-byte string below ffffffffffffffffffffffffffffff61.
 # * Shares are 17-byte binary strings with first byte indicating threshold and share index (these are necessary for recovery).
-# 
+#
 # See also: https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing
 require 'digest/sha2'
 require 'securerandom'
 module Dash
   class SecretSharing
-    
+
     Order96  = 0xffffffffffffffffffffffef         # Largest prime below 2**96: (2**96 - 17)
     Order104 = 0xffffffffffffffffffffffffef       # Largest prime below 2**104: (2**104 - 17)
     Order128 = 0xffffffffffffffffffffffffffffff61 # Largest prime below 2**128: (2**128 - 159)
-    
+
     def initialize(bitlength = 128)
       if bitlength == 128
         @order = Order128
@@ -28,11 +28,11 @@ module Dash
       end
       @bitlength = bitlength
     end
-    
+
     def random
       be_from_int(SecureRandom.random_number(@order))
     end
-  
+
     # Returns N strings, any M of them are enough to retrieve a secret.
     # Each string encodes X and Y coordinates and also M. X & M takes one byte, Y takes 16 bytes:
     # MMMMXXXX YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY YYYYYYYY
@@ -67,7 +67,7 @@ module Dash
       end
       shares
     end
-  
+
     # Transforms M 17-byte binary strings into original secret 16-byte binary string.
     # Each share string must be well-formed.
     def restore(shares)
@@ -120,7 +120,7 @@ module Dash
       byte = [(m << 4) + x].pack("C")
       byte + be_from_int(y)
     end
-  
+
     # returns [m, x, y]
     def point_from_string(s)
       byte = s.bytes.first
@@ -129,8 +129,8 @@ module Dash
       y = int_from_be(s[1..-1])
       [m, x, y]
     end
-  
-    # Encodes values in range 1..16 to one nibble where all values are encoded as-is, 
+
+    # Encodes values in range 1..16 to one nibble where all values are encoded as-is,
     # except for 16 which becomes 0. This is to make strings look friendly for common cases when M,N < 16
     def to_nibble(x)
       x == 16 ? 0 : x
@@ -152,7 +152,7 @@ module Dash
       end
     end
 
-    # Gives the multiplicative inverse of k mod prime. In other words (k * modInverse(k)) % prime = 1 for all prime > k >= 1  
+    # Gives the multiplicative inverse of k mod prime. In other words (k * modInverse(k)) % prime = 1 for all prime > k >= 1
     def modinv(k, prime)
       k = k % prime
       r = (k < 0) ? -gcd_decomposition(prime,-k)[2] : gcd_decomposition(prime,k)[2]
@@ -182,11 +182,11 @@ module Dash
 end
 
 if $0 == __FILE__
-  
+
   ssss = Dash::SecretSharing.new(128)
   require_relative 'data.rb'
-  
-  # Usage 
+
+  # Usage
   secret = ssss.random
   puts "Secret: #{Dash.to_hex(secret)}"
   shares = ssss.split(secret, 2, 3)
@@ -199,7 +199,7 @@ if $0 == __FILE__
   puts "Recovered secret with shares 1 and 3: #{Dash.to_hex(restored_secret)}"
   restored_secret = ssss.restore([shares[1], shares[2]])
   puts "Recovered secret with shares 2 and 3: #{Dash.to_hex(restored_secret)}"
-  
+
   # Output:
   # Secret: d881c6f74ccac24997bb27040640a8eb
   # Share:  2147018841997da8d92211ad7590f85754
@@ -208,9 +208,9 @@ if $0 == __FILE__
   # Recovered secret with shares 2 and 1: d881c6f74ccac24997bb27040640a8eb
   # Recovered secret with shares 1 and 3: d881c6f74ccac24997bb27040640a8eb
   # Recovered secret with shares 2 and 3: d881c6f74ccac24997bb27040640a8eb
-  
+
   # Test Vectors
-  
+
   test_vectors = [
     {
       "secret" => "31415926535897932384626433832795",
@@ -220,7 +220,7 @@ if $0 == __FILE__
       "1-of-3" => ["1131415926535897932384626433832795", "1231415926535897932384626433832795", "1331415926535897932384626433832795"],
       "2-of-3" => ["215af384f05d9b45f0e4e348f95b371acd", "2284a5b0ba67ddf44ea6422f8e82eb0e05", "23ae57dc847220a2ac67a11623aa9f013d"],
       "3-of-3" => ["316cb005ab037e85ed9c8befbe72fef75c", "321387c8a1b34863197fae486ca60c1b97", "3325c8a20a62b62f16cceb6c6eccaa93a7"],
-      "4-of-6" => ["416c4b3a8dc218696f8b1aed23385496eb", "429b14a744ce462bdc71b910b5cf0890ba", "4384d4d7881b01db3881cd0f17457112c8", 
+      "4-of-6" => ["416c4b3a8dc218696f8b1aed23385496eb", "429b14a744ce462bdc71b910b5cf0890ba", "4384d4d7881b01db3881cd0f17457112c8",
                    "44f0c303944b6b73e265c52a42e9601a3c", "45a61663a602a2f238c80fa43408a7a57b", "466c062ff9e3c8529a531abee5f119b1ac"],
       "10-of-16"=>["a1a8b4077b75b0b18aefa63399d0b8d749", "a2e015e817190296d9ebe29f1c8cdc21c7", "a3c65760010c358c9760cece5da815edb4", "a4129891c5efd375a8367c854ab08010d6",
                    "a53c138386a55b0b35447ca03e44ab4eeb", "a6182993f21038c5d3bf548dac9dee7e20", "a769f010c04a4996b471a82addd4ea05d4", "a88e27a316dda9822f81616b2d48cb5e23",
@@ -281,7 +281,7 @@ if $0 == __FILE__
       "3-of-3" => ["315a50b9d324cbf8cf4546d9e085", "32ca50d93a5f8028070814b77faa", "3350005e35b01c8da7486998dd80"],
     },
   ]
-  
+
   test_vectors.each do |test|
     hexsecret = test.delete("secret")
     secret = Dash.from_hex(hexsecret)
@@ -309,8 +309,8 @@ if $0 == __FILE__
       end
     end
   end
-  
-  
+
+
   begin
     require_relative 'base58'
     payload_length = 14 # 13 + checksum
@@ -333,7 +333,7 @@ if $0 == __FILE__
         puts "                    " + s
       end
     end
-    
+
     puts "Lengths: #{lengths.keys.sort.inspect}"
   rescue => e
   end
