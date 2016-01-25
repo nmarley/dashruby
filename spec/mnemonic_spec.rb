@@ -87,3 +87,16 @@ describe Dash::Mnemonic, "standard test vectors" do
     end
   end
 end
+
+# Electrum seed support
+describe Dash::Mnemonic do
+
+  describe "Electrum seeds" do
+    it "should support Electrum mnemonic to seed" do
+      seed = '741b72fd15effece6bfe5a26a52184f66811bd2be363190e07a42cca442b1a5bb22b3ad0eb338197287e6d314866c7fba863ac65d3f156087a5052ebc7157fce'.from_hex
+      mnemonic = Dash::Mnemonic.new(words: 'foobar', password: 'none')
+      mnemonic.electrum_seed.to_hex.must_equal seed.to_hex
+    end
+  end
+
+end
