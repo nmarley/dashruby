@@ -210,7 +210,7 @@ module Dash
     end
 
     def init_with_seed(seed, network: nil)
-      hmac = Dash.hmac_sha512(data: seed, key: "Dash seed".encode(Encoding::ASCII))
+      hmac = Dash.hmac_sha512(data: seed, key: "Bitcoin seed".encode(Encoding::ASCII))
       @private_key = hmac[0,32]
       @public_key = Dash::Key.new(private_key: @private_key, public_key_compressed: true).public_key
       @chain_code = hmac[32,32]
