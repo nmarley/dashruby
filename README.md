@@ -1,6 +1,6 @@
 # DashRuby
 
-DashRuby is a clone of DashRuby, used for creating [Dash](https://www.dash.org/) applications.
+DashRuby is a clone of [BTCRuby](https://github.com/oleganza/btcruby), used for creating [Dash](https://www.dash.org/) applications.
 
 **Warning: This library is currently in alpha stage. Use at your own risk.**
 
