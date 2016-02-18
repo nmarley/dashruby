@@ -107,9 +107,9 @@ module Dash
 
     def key
       @key ||= if @private_key
-        Dash::Key.new(private_key: @private_key, public_key_compressed: true)
+        Dash::Key.new(private_key: @private_key, public_key_compressed: true, network: @network)
       else
-        Dash::Key.new(public_key: @public_key)
+        Dash::Key.new(public_key: @public_key, network: @network)
       end
     end
 
