@@ -22,10 +22,10 @@ module Dash
 
     MAX_INDEX = 0x7fffffff
 
-    PUBLIC_MAINNET_VERSION  = 0x02FE52F8 # drkv
-    PRIVATE_MAINNET_VERSION = 0x02FE52CC # drkp
-    PUBLIC_TESTNET_VERSION  = 0x3A8061A0 # DRKV
-    PRIVATE_TESTNET_VERSION = 0x3A805837 # DRKP
+    PUBLIC_MAINNET_VERSION  = 0x0488B21E # xpub
+    PRIVATE_MAINNET_VERSION = 0x0488ADE4 # xprv
+    PUBLIC_TESTNET_VERSION  = 0x043587CF # tpub
+    PRIVATE_TESTNET_VERSION = 0x04358394 # tprv
 
     # Instance of Dash::Key that is a "head" of this keychain.
     # If the keychain is public-only, key does not have a private component.
