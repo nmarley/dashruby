@@ -231,7 +231,7 @@ module Dash
     end
 
     def self.testnet_version
-      139
+      140
     end
 
     def p2pkh?
